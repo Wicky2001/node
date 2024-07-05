@@ -1,0 +1,82 @@
+1.Get file path dyamically
+
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+the __dirname give the path to the our project folder from the root.
+
+ex-: suppose our index.js file is reside in "myFirstProject".
+Then the __dir => "C:\Users\Wicky\Documents\GitHub\node\myFirstProject"
+
+
+
+2.middlewares(Custom middleware)
+
+-middlewares triggers before endpoints
+-app.use() method is use to set middlewares
+
+ex - app.use(end_point_name,function_to_trigger)
+     
+    app.use("/dashBoard", (req, res, next) => {
+    console.log("Hello I'm dashboard middleware");
+    next();
+});
+
+-next() method allows to pass the execution to other endpoints and middlewares.
+-next() pass the execution to the next middle ware in stack.
+- if we do not specify next() code lines after next not going to execute.
+
+ex-: 
+
+app.use("/dashBoard", (req, res, next) => {
+  console.log("Hello I'm dashboard middleware"); --> 0
+  next();
+});
+
+app.use("/dashBoard", (req, res, next) => {   --> 1
+  console.log("Hello I'm next middleware");
+  
+});
+
+
+app.get("/dashBoard", (req, res) => {          --> 2
+  console.log("I'm dashboard get endpoint");
+});
+
+- when a get request come to "/dashboard" end point first it go through 0 miidle ware.
+- then 0 pass that it to next middle ware which is 1 using next.
+- here the code inside 2 do not get execute because we didn't specify next() in 1's body
+
+
+- here the order of middleware is matter.if we put middle ware after endpoint it do not work
+
+- if we do not specify end_point_name in app.use() the middleware will trigger for all the incomming
+  requests 
+
+app.use((req, res, next) => {   --> 1
+  console.log("Hello I'm next middleware");
+  
+});
+
+
+3.body parser
+
+-body parser is a middleware which is use to parse the URL encoded data inside incomming requests such as
+ form data in a post request
+
+-It read all data and add attribute name - "body" to request. so we can access data inside
+ request using "req.body"
+
+-In new version of express this functionality is embeded in to express so we do not need to separately
+ install it.
+
+ 
+
+3.morgan 
+
+morgan is a 3rd party middleware which is use to log the request comming in to the created server.
+
+
+
